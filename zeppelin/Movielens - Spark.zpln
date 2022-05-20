@@ -1,0 +1,1163 @@
+﻿{
+  "paragraphs": [
+    {
+      "text": "%md\n# Movielens Spark Scala & Spark SQL",
+      "user": "anonymous",
+      "dateUpdated": "2022-05-20T09:23:48+0000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "<h1>Movielens Spark Scala &amp; Spark SQL</h1>\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1653037918297_665570162",
+      "id": "paragraph_1653037918297_665570162",
+      "dateCreated": "2022-05-20T09:11:58+0000",
+      "dateStarted": "2022-05-20T09:23:48+0000",
+      "dateFinished": "2022-05-20T09:23:48+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:16710"
+    },
+    {
+      "text": "%spark\nspark.version",
+      "user": "anonymous",
+      "dateUpdated": "2022-05-20T09:23:48+0000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "text",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/text",
+        "fontSize": 9,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mres22\u001b[0m: \u001b[1m\u001b[32mString\u001b[0m = 3.2.0-amzn-0\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1653035320989_1240881464",
+      "id": "paragraph_1653035320989_1240881464",
+      "dateCreated": "2022-05-20T08:28:40+0000",
+      "dateStarted": "2022-05-20T09:23:48+0000",
+      "dateFinished": "2022-05-20T09:23:48+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:16711"
+    },
+    {
+      "text": "%spark\nval dataPath: String = \"s3://big-data-cloud-radek2/\"\nval moviesPath: String = dataPath + \"/movielens/hive/movies/movies.dat\"\nval tagsPath: String = dataPath + \"/movielens/hive/tags/tags.dat\"\nval ratingsPath: String = dataPath + \"/movielens/hive/ratings/ratings.dat\"\nval movielensSeparator: String = \"@\"",
+      "user": "anonymous",
+      "dateUpdated": "2022-05-20T09:23:48+0000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mdataPath\u001b[0m: \u001b[1m\u001b[32mString\u001b[0m = s3://big-data-cloud-radek2/\n\u001b[1m\u001b[34mmoviesPath\u001b[0m: \u001b[1m\u001b[32mString\u001b[0m = s3://big-data-cloud-radek2//movielens/hive/movies/movies.dat\n\u001b[1m\u001b[34mtagsPath\u001b[0m: \u001b[1m\u001b[32mString\u001b[0m = s3://big-data-cloud-radek2//movielens/hive/tags/tags.dat\n\u001b[1m\u001b[34mratingsPath\u001b[0m: \u001b[1m\u001b[32mString\u001b[0m = s3://big-data-cloud-radek2//movielens/hive/ratings/ratings.dat\n\u001b[1m\u001b[34mmovielensSeparator\u001b[0m: \u001b[1m\u001b[32mString\u001b[0m = @\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1653035375535_420828899",
+      "id": "paragraph_1653035375535_420828899",
+      "dateCreated": "2022-05-20T08:29:35+0000",
+      "dateStarted": "2022-05-20T09:23:48+0000",
+      "dateFinished": "2022-05-20T09:23:48+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:16712"
+    },
+    {
+      "text": "%spark\nval moviesDataFrame = spark.read.\n  option(\"header\", \"false\").\n  option(\"charset\", \"UTF8\").\n  option(\"delimiter\", movielensSeparator).\n  option(\"inferSchema\", \"true\").\n  csv(moviesPath).\n  withColumnRenamed(\"_c0\", \"movieId\").\n  withColumnRenamed(\"_c1\", \"title\").\n  withColumnRenamed(\"_c2\", \"genres\")",
+      "user": "anonymous",
+      "dateUpdated": "2022-05-20T09:23:48+0000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mmoviesDataFrame\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m = [movieId: int, title: string ... 1 more field]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://ip-172-31-68-206.ec2.internal:4040/jobs/job?id=71",
+              "$$hashKey": "object:28496"
+            },
+            {
+              "jobUrl": "http://ip-172-31-68-206.ec2.internal:4040/jobs/job?id=72",
+              "$$hashKey": "object:28497"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1653037583673_32339963",
+      "id": "paragraph_1653037583673_32339963",
+      "dateCreated": "2022-05-20T09:06:23+0000",
+      "dateStarted": "2022-05-20T09:23:48+0000",
+      "dateFinished": "2022-05-20T09:23:49+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:16713"
+    },
+    {
+      "text": "%spark\nval ratingsDataFrame = spark.read.\n  option(\"header\", \"false\").\n  option(\"charset\", \"UTF8\").\n  option(\"delimiter\", movielensSeparator).\n  option(\"inferSchema\", \"true\").\n  csv(ratingsPath).\n  withColumnRenamed(\"_c0\", \"userId\").\n  withColumnRenamed(\"_c1\", \"movieId\").\n  withColumnRenamed(\"_c2\", \"rating\").\n  withColumnRenamed(\"_c3\", \"timestamp\")",
+      "user": "anonymous",
+      "dateUpdated": "2022-05-20T09:23:49+0000",
+      "progress": 50,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mratingsDataFrame\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m = [userId: int, movieId: int ... 2 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://ip-172-31-68-206.ec2.internal:4040/jobs/job?id=73",
+              "$$hashKey": "object:28545"
+            },
+            {
+              "jobUrl": "http://ip-172-31-68-206.ec2.internal:4040/jobs/job?id=74",
+              "$$hashKey": "object:28546"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1653037601996_2020980472",
+      "id": "paragraph_1653037601996_2020980472",
+      "dateCreated": "2022-05-20T09:06:41+0000",
+      "dateStarted": "2022-05-20T09:23:49+0000",
+      "dateFinished": "2022-05-20T09:23:55+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:16714"
+    },
+    {
+      "text": "%spark\nval tagsDataFrame = spark.read.\n  option(\"header\", \"false\").\n  option(\"charset\", \"UTF8\").\n  option(\"delimiter\", movielensSeparator).\n  option(\"inferSchema\", \"true\").\n  csv(tagsPath).\n  withColumnRenamed(\"_c0\", \"userId\").\n  withColumnRenamed(\"_c1\", \"movieId\").\n  withColumnRenamed(\"_c2\", \"tag\").\n  withColumnRenamed(\"_c3\", \"timestamp\")",
+      "user": "anonymous",
+      "dateUpdated": "2022-05-20T09:23:55+0000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u001b[1m\u001b[34mtagsDataFrame\u001b[0m: \u001b[1m\u001b[32morg.apache.spark.sql.DataFrame\u001b[0m = [userId: int, movieId: int ... 2 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://ip-172-31-68-206.ec2.internal:4040/jobs/job?id=75",
+              "$$hashKey": "object:28594"
+            },
+            {
+              "jobUrl": "http://ip-172-31-68-206.ec2.internal:4040/jobs/job?id=76",
+              "$$hashKey": "object:28595"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1653037625136_447222145",
+      "id": "paragraph_1653037625136_447222145",
+      "dateCreated": "2022-05-20T09:07:05+0000",
+      "dateStarted": "2022-05-20T09:23:55+0000",
+      "dateFinished": "2022-05-20T09:23:56+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:16715"
+    },
+    {
+      "text": "%spark\nmoviesDataFrame.show(10)",
+      "user": "anonymous",
+      "dateUpdated": "2022-05-20T09:23:56+0000",
+      "progress": 100,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-------+--------------------+--------------------+\n|movieId|               title|              genres|\n+-------+--------------------+--------------------+\n|      1|    Toy Story (1995)|Adventure|Animati...|\n|      2|      Jumanji (1995)|Adventure|Childre...|\n|      3|Grumpier Old Men ...|      Comedy|Romance|\n|      4|Waiting to Exhale...|Comedy|Drama|Romance|\n|      5|Father of the Bri...|              Comedy|\n|      6|         Heat (1995)|Action|Crime|Thri...|\n|      7|      Sabrina (1995)|      Comedy|Romance|\n|      8| Tom and Huck (1995)|  Adventure|Children|\n|      9| Sudden Death (1995)|              Action|\n|     10|    GoldenEye (1995)|Action|Adventure|...|\n+-------+--------------------+--------------------+\nonly showing top 10 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://ip-172-31-68-206.ec2.internal:4040/jobs/job?id=77",
+              "$$hashKey": "object:28633"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1653037769962_473569575",
+      "id": "paragraph_1653037769962_473569575",
+      "dateCreated": "2022-05-20T09:09:29+0000",
+      "dateStarted": "2022-05-20T09:23:56+0000",
+      "dateFinished": "2022-05-20T09:23:56+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:16716"
+    },
+    {
+      "text": "%spark\nmoviesDataFrame.printSchema()",
+      "user": "anonymous",
+      "dateUpdated": "2022-05-20T09:23:56+0000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "root\n |-- movieId: integer (nullable = true)\n |-- title: string (nullable = true)\n |-- genres: string (nullable = true)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1653037797439_518038558",
+      "id": "paragraph_1653037797439_518038558",
+      "dateCreated": "2022-05-20T09:09:57+0000",
+      "dateStarted": "2022-05-20T09:23:56+0000",
+      "dateFinished": "2022-05-20T09:23:57+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:16717"
+    },
+    {
+      "text": "%spark\nmoviesDataFrame.filter($\"title\".contains(\"2005\")).show()",
+      "user": "anonymous",
+      "dateUpdated": "2022-05-20T09:23:57+0000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-------+--------------------+--------------------+\n|movieId|               title|              genres|\n+-------+--------------------+--------------------+\n|  27509|     Carolina (2005)|      Comedy|Romance|\n|  27618|Sound of Thunder,...|Action|Adventure|...|\n|  27773|       Oldboy (2005)|Action|Adventure|...|\n|  27788|  Jacket, The (2005)|Drama|Fantasy|Thr...|\n|  27821|Interpreter, The ...|      Drama|Thriller|\n|  27839|Ring Two, The (2005)|Drama|Horror|Myst...|\n|  30793|Charlie and the C...|Adventure|Childre...|\n|  30894|  White Noise (2005)|Drama|Mystery|Rom...|\n|  30896|Underclassman (2005)|Action|Comedy|Thr...|\n|  30898|Upside of Anger, ...|Comedy|Drama|Romance|\n|  31221|      Elektra (2005)|Action|Adventure|...|\n|  31223|Racing Stripes (2...|     Children|Comedy|\n|  31225| Coach Carter (2005)|               Drama|\n|  31420|Assault on Precin...|Action|Crime|Dram...|\n|  31422|Are We There Yet?...|     Children|Comedy|\n|  31424|Alone in the Dark...|Action|Horror|Sci...|\n|  31427|Hide and Seek (2005)|Drama|Horror|Thri...|\n|  31429|Aliens of the Dee...|    Documentary|IMAX|\n|  31431|    Boogeyman (2005)|Drama|Horror|Myst...|\n|  31433|Wedding Date, The...|      Comedy|Romance|\n+-------+--------------------+--------------------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://ip-172-31-68-206.ec2.internal:4040/jobs/job?id=78",
+              "$$hashKey": "object:28691"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1653037805639_1112119643",
+      "id": "paragraph_1653037805639_1112119643",
+      "dateCreated": "2022-05-20T09:10:05+0000",
+      "dateStarted": "2022-05-20T09:23:57+0000",
+      "dateFinished": "2022-05-20T09:23:57+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:16718"
+    },
+    {
+      "text": "%spark\nmoviesDataFrame.createOrReplaceTempView(\"movies\")\nratingsDataFrame.createOrReplaceTempView(\"ratings\")\nratingsDataFrame.createOrReplaceTempView(\"tags\")",
+      "user": "anonymous",
+      "dateUpdated": "2022-05-20T09:23:57+0000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "runtimeInfos": {},
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1653037823271_256824598",
+      "id": "paragraph_1653037823271_256824598",
+      "dateCreated": "2022-05-20T09:10:23+0000",
+      "dateStarted": "2022-05-20T09:23:57+0000",
+      "dateFinished": "2022-05-20T09:23:58+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:16719"
+    },
+    {
+      "text": "%spark.sql\nselect * from movies limit 100;",
+      "user": "anonymous",
+      "dateUpdated": "2022-05-20T09:23:58+0000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "editorHide": false,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "movieId": "string",
+                      "title": "string",
+                      "genres": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "movieId\ttitle\tgenres\n1\tToy Story (1995)\tAdventure|Animation|Children|Comedy|Fantasy\n2\tJumanji (1995)\tAdventure|Children|Fantasy\n3\tGrumpier Old Men (1995)\tComedy|Romance\n4\tWaiting to Exhale (1995)\tComedy|Drama|Romance\n5\tFather of the Bride Part II (1995)\tComedy\n6\tHeat (1995)\tAction|Crime|Thriller\n7\tSabrina (1995)\tComedy|Romance\n8\tTom and Huck (1995)\tAdventure|Children\n9\tSudden Death (1995)\tAction\n10\tGoldenEye (1995)\tAction|Adventure|Thriller\n11\tAmerican President, The (1995)\tComedy|Drama|Romance\n12\tDracula: Dead and Loving It (1995)\tComedy|Horror\n13\tBalto (1995)\tAnimation|Children\n14\tNixon (1995)\tDrama\n15\tCutthroat Island (1995)\tAction|Adventure|Romance\n16\tCasino (1995)\tCrime|Drama\n17\tSense and Sensibility (1995)\tComedy|Drama|Romance\n18\tFour Rooms (1995)\tComedy|Drama|Thriller\n19\tAce Ventura: When Nature Calls (1995)\tComedy\n20\tMoney Train (1995)\tAction|Comedy|Crime|Drama|Thriller\n21\tGet Shorty (1995)\tAction|Comedy|Drama\n22\tCopycat (1995)\tCrime|Drama|Horror|Mystery|Thriller\n23\tAssassins (1995)\tAction|Crime|Thriller\n24\tPowder (1995)\tDrama|Sci-Fi\n25\tLeaving Las Vegas (1995)\tDrama|Romance\n26\tOthello (1995)\tDrama\n27\tNow and Then (1995)\tDrama\n28\tPersuasion (1995)\tDrama|Romance\n29\tCity of Lost Children, The (Cité des enfants perdus, La) (1995)\tAdventure|Drama|Fantasy|Mystery|Sci-Fi\n30\tShanghai Triad (Yao a yao yao dao waipo qiao) (1995)\tCrime|Drama\n31\tDangerous Minds (1995)\tDrama\n32\t12 Monkeys (Twelve Monkeys) (1995)\tSci-Fi|Thriller\n33\tWings of Courage (1995)\tAdventure|IMAX|Romance\n34\tBabe (1995)\tChildren|Comedy|Drama|Fantasy\n35\tCarrington (1995)\tDrama|Romance\n36\tDead Man Walking (1995)\tCrime|Drama\n37\tAcross the Sea of Time (1995)\tDocumentary|IMAX\n38\tIt Takes Two (1995)\tComedy\n39\tClueless (1995)\tComedy|Romance\n40\tCry, the Beloved Country (1995)\tDrama\n41\tRichard III (1995)\tDrama|War\n42\tDead Presidents (1995)\tAction|Crime|Drama\n43\tRestoration (1995)\tDrama\n44\tMortal Kombat (1995)\tAction|Adventure|Fantasy\n45\tTo Die For (1995)\tComedy|Drama|Thriller\n46\tHow to Make an American Quilt (1995)\tDrama|Romance\n47\tSeven (a.k.a. Se7en) (1995)\tCrime|Horror|Mystery|Thriller\n48\tPocahontas (1995)\tAnimation|Children|Musical|Romance\n49\tWhen Night Is Falling (1995)\tDrama|Romance\n50\tUsual Suspects, The (1995)\tCrime|Mystery|Thriller\n51\tGuardian Angel (1994)\tAction|Drama|Thriller\n52\tMighty Aphrodite (1995)\tComedy|Drama|Romance\n53\tLamerica (1994)\tAdventure|Drama\n54\tBig Green, The (1995)\tChildren|Comedy\n55\tGeorgia (1995)\tDrama\n56\tKids of the Round Table (1995)\tAdventure|Children|Fantasy\n57\tHome for the Holidays (1995)\tDrama\n58\tPostman, The (Postino, Il) (1994)\tComedy|Drama|Romance\n59\tConfessional, The (Confessionnal, Le) (1995)\tDrama|Mystery\n60\tIndian in the Cupboard, The (1995)\tAdventure|Children|Fantasy\n61\tEye for an Eye (1996)\tDrama|Thriller\n62\tMr. Holland's Opus (1995)\tDrama\n63\tDon't Be a Menace to South Central While Drinking Your Juice in the Hood (1996)\tComedy|Crime\n64\tTwo if by Sea (1996)\tComedy|Romance\n65\tBio-Dome (1996)\tComedy\n66\tLawnmower Man 2: Beyond Cyberspace (1996)\tAction|Sci-Fi|Thriller\n67\tTwo Bits (1995)\tDrama\n68\tFrench Twist (Gazon maudit) (1995)\tComedy|Romance\n69\tFriday (1995)\tComedy\n70\tFrom Dusk Till Dawn (1996)\tAction|Comedy|Horror|Thriller\n71\tFair Game (1995)\tAction\n72\tKicking and Screaming (1995)\tComedy|Drama\n73\tMisérables, Les (1995)\tDrama|War\n74\tBed of Roses (1996)\tDrama|Romance\n75\tBig Bully (1996)\tComedy|Drama\n76\tScreamers (1995)\tAction|Sci-Fi|Thriller\n77\tNico Icon (1995)\tDocumentary\n78\tCrossing Guard, The (1995)\tDrama\n79\tJuror, The (1996)\tDrama|Thriller\n80\tWhite Balloon, The (Badkonake sefid) (1995)\tChildren|Drama\n81\tThings to Do in Denver When You're Dead (1995)\tCrime|Drama|Romance\n82\tAntonia's Line (Antonia) (1995)\tComedy|Drama\n83\tOnce Upon a Time... When We Were Colored (1995)\tDrama\n84\tLast Summer in the Hamptons (1995)\tComedy|Drama\n85\tAngels and Insects (1995)\tDrama|Romance\n86\tWhite Squall (1996)\tAdventure|Drama\n87\tDunston Checks In (1996)\tChildren|Comedy\n88\tBlack Sheep (1996)\tComedy\n89\tNick of Time (1995)\tAction|Thriller\n90\tJourney of August King, The (1995)\tDrama\n92\tMary Reilly (1996)\tDrama|Horror|Thriller\n93\tVampire in Brooklyn (1995)\tComedy|Romance\n94\tBeautiful Girls (1996)\tComedy|Drama|Romance\n95\tBroken Arrow (1996)\tAction|Adventure|Thriller\n96\tIn the Bleak Midwinter (1995)\tComedy|Drama\n97\tHate (Haine, La) (1995)\tDrama\n98\tShopping (1994)\tAction|Thriller\n99\tHeidi Fleiss: Hollywood Madam (1995)\tDocumentary\n100\tCity Hall (1996)\tDrama|Thriller\n101\tBottle Rocket (1996)\tAdventure|Comedy|Crime|Romance\n"
+          }
+        ]
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://ip-172-31-68-206.ec2.internal:4040/jobs/job?id=79",
+              "$$hashKey": "object:28814"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1653037832423_518410376",
+      "id": "paragraph_1653037832423_518410376",
+      "dateCreated": "2022-05-20T09:10:32+0000",
+      "dateStarted": "2022-05-20T09:23:58+0000",
+      "dateFinished": "2022-05-20T09:23:58+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:16720"
+    },
+    {
+      "text": "%spark.sql\nselect m.title, avg(r.rating) rate, count(1) votes\nfrom movies m\njoin ratings r on m.movieid = r.movieid\ngroup by m.title\nhaving votes > 100\norder by rate desc limit 10 ;",
+      "user": "anonymous",
+      "dateUpdated": "2022-05-20T09:23:58+0000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9,
+        "editorHide": false,
+        "title": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "title": "string",
+                      "rate": "string",
+                      "votes": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://ip-172-31-68-206.ec2.internal:4040/jobs/job?id=81",
+              "$$hashKey": "object:29460"
+            },
+            {
+              "jobUrl": "http://ip-172-31-68-206.ec2.internal:4040/jobs/job?id=82",
+              "$$hashKey": "object:29461"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1653037851519_1544941328",
+      "id": "paragraph_1653037851519_1544941328",
+      "dateCreated": "2022-05-20T09:10:51+0000",
+      "status": "FINISHED",
+      "$$hashKey": "object:16721",
+      "dateFinished": "2022-05-20T09:24:05+0000",
+      "dateStarted": "2022-05-20T09:23:58+0000",
+      "title": "TOP 10 filmów wszech czasów",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "title\trate\tvotes\nShawshank Redemption, The (1994)\t4.457238321660348\t31126\nGodfather, The (1972)\t4.415085293227011\t19814\nUsual Suspects, The (1995)\t4.367142322253193\t24037\nSchindler's List (1993)\t4.363482949916592\t25777\nSunset Blvd. (a.k.a. Sunset Boulevard) (1950)\t4.321966205837174\t3255\nCasablanca (1942)\t4.319740945070761\t12507\nRear Window (1954)\t4.316543909348442\t8825\nDouble Indemnity (1944)\t4.315439034540158\t2403\nSeven Samurai (Shichinin no samurai) (1954)\t4.314119283602851\t5751\nThird Man, The (1949)\t4.313629402756509\t3265\n"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%spark.sql\nselect substring(title, -5, 4) year, count(*) ile\nfrom movies\ngroup by substring(title, -5, 4)\norder by ile desc;\n",
+      "user": "anonymous",
+      "dateUpdated": "2022-05-20T09:24:05+0000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "editorHide": false,
+        "title": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "year": "string",
+                      "ile": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "year",
+                  "index": 0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "ile",
+                  "index": 1,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://ip-172-31-68-206.ec2.internal:4040/jobs/job?id=83",
+              "$$hashKey": "object:30051"
+            },
+            {
+              "jobUrl": "http://ip-172-31-68-206.ec2.internal:4040/jobs/job?id=84",
+              "$$hashKey": "object:30052"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1653038072544_1332822932",
+      "id": "paragraph_1653038072544_1332822932",
+      "dateCreated": "2022-05-20T09:14:32+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:19280",
+      "dateFinished": "2022-05-20T09:24:05+0000",
+      "dateStarted": "2022-05-20T09:24:05+0000",
+      "title": "Rozkład filmów w latach (według daty produkcji)",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "year\tile\n2002\t441\n2000\t405\n2001\t403\n1996\t384\n1998\t384\n1997\t370\n2003\t366\n2007\t364\n1995\t362\n1999\t357\n2006\t345\n2004\t342\n2005\t332\n1994\t307\n1993\t258\n2008\t251\n1988\t214\n1992\t212\n1989\t212\n1987\t205\n1990\t200\n1991\t188\n1981\t178\n1982\t170\n1986\t166\n1980\t161\n1985\t158\n1984\t137\n1983\t111\n1979\t87\n1966\t87\n1972\t83\n1977\t83\n1978\t82\n1973\t81\n1974\t75\n1976\t75\n1975\t74\n1971\t73\n1968\t72\n1965\t72\n1964\t72\n1970\t71\n1962\t69\n1967\t68\n1960\t66\n1969\t64\n1963\t63\n1958\t62\n1957\t62\n1959\t61\n1955\t57\n1961\t57\n1953\t55\n1956\t53\n1948\t46\n1950\t44\n1951\t44\n1954\t43\n1940\t40\n1943\t40\n1952\t40\n1947\t39\n1942\t38\n1946\t38\n1939\t37\n1944\t37\n1949\t37\n1945\t36\n1936\t32\n1937\t30\n1941\t28\n1933\t23\n1932\t22\n1938\t19\n1927\t19\n1934\t18\n1935\t18\n1931\t16\n1930\t15\n1928\t10\n1926\t10\n1925\t10\n1929\t7\n1922\t7\n1924\t6\n1923\t6\n1920\t5\n1919\t4\n1921\t3\n1916\t2\n1918\t2\n1917\t2\n1915\t1\n"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%spark.sql\nselect q.genre as genre, count(1) as counted\nfrom (select explode(split(genres,\"\\\\|\")) AS genre from movies) q\ngroup by genre\norder by counted desc;",
+      "user": "anonymous",
+      "dateUpdated": "2022-05-20T09:24:05+0000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "editorHide": false,
+        "title": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "pieChart",
+              "height": 394,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "genre": "string",
+                      "counted": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://ip-172-31-68-206.ec2.internal:4040/jobs/job?id=85",
+              "$$hashKey": "object:30212"
+            },
+            {
+              "jobUrl": "http://ip-172-31-68-206.ec2.internal:4040/jobs/job?id=86",
+              "$$hashKey": "object:30213"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1653038086621_1731403719",
+      "id": "paragraph_1653038086621_1731403719",
+      "dateCreated": "2022-05-20T09:14:46+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:20010",
+      "dateFinished": "2022-05-20T09:24:05+0000",
+      "dateStarted": "2022-05-20T09:24:05+0000",
+      "title": "Liczba filmów według gatunku",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "genre\tcounted\nDrama\t5339\nComedy\t3703\nThriller\t1706\nRomance\t1685\nAction\t1473\nCrime\t1118\nAdventure\t1025\nHorror\t1013\nSci-Fi\t754\nFantasy\t543\nChildren\t528\nWar\t511\nMystery\t509\nDocumentary\t482\nMusical\t436\nAnimation\t286\nWestern\t275\nFilm-Noir\t148\nIMAX\t29\n(no genres listed)\t1\n"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%spark.sql\nselect year(from_unixtime(cast(timestamp as bigint))) as years, count(*) as ile\nfrom ratings\ngroup by year(from_unixtime(cast(timestamp as bigint)))\norder by years\nlimit 10;",
+      "user": "anonymous",
+      "dateUpdated": "2022-05-20T09:24:06+0000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 6,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "editorHide": false,
+        "title": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "years": "string",
+                      "ile": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "years",
+                  "index": 0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "ile",
+                  "index": 1,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://ip-172-31-68-206.ec2.internal:4040/jobs/job?id=87",
+              "$$hashKey": "object:30370"
+            },
+            {
+              "jobUrl": "http://ip-172-31-68-206.ec2.internal:4040/jobs/job?id=88",
+              "$$hashKey": "object:30371"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1653038210454_1239575838",
+      "id": "paragraph_1653038210454_1239575838",
+      "dateCreated": "2022-05-20T09:16:50+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:20946",
+      "dateFinished": "2022-05-20T09:24:14+0000",
+      "dateStarted": "2022-05-20T09:24:06+0000",
+      "title": "Oceny w latach",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "years\tile\n1995\t3\n1996\t1047618\n1997\t459947\n1998\t202092\n1999\t788793\n2000\t1271623\n2001\t759141\n2002\t583409\n2003\t688694\n2004\t768168\n"
+          }
+        ]
+      }
+    },
+    {
+      "text": "%spark.sql\nselect year(from_unixtime(cast(timestamp as bigint))) as year, count(*) as ile\nfrom tags\ngroup by year(from_unixtime(cast(timestamp as bigint)))\norder by year\nlimit 10;",
+      "user": "anonymous",
+      "dateUpdated": "2022-05-20T09:24:14+0000",
+      "progress": 0,
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 6,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9,
+        "editorHide": false,
+        "title": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 300,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "year": "string",
+                      "ile": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "year",
+                  "index": 0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "ile",
+                  "index": 1,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "runtimeInfos": {
+        "jobUrl": {
+          "propertyName": "jobUrl",
+          "label": "SPARK JOB",
+          "tooltip": "View in Spark web UI",
+          "group": "spark",
+          "values": [
+            {
+              "jobUrl": "http://ip-172-31-68-206.ec2.internal:4040/jobs/job?id=89",
+              "$$hashKey": "object:30535"
+            },
+            {
+              "jobUrl": "http://ip-172-31-68-206.ec2.internal:4040/jobs/job?id=90",
+              "$$hashKey": "object:30536"
+            }
+          ],
+          "interpreterSettingId": "spark"
+        }
+      },
+      "progressUpdateIntervalMs": 500,
+      "jobName": "paragraph_1653038250972_723393442",
+      "id": "paragraph_1653038250972_723393442",
+      "dateCreated": "2022-05-20T09:17:30+0000",
+      "status": "FINISHED",
+      "focus": true,
+      "$$hashKey": "object:21854",
+      "dateFinished": "2022-05-20T09:24:23+0000",
+      "dateStarted": "2022-05-20T09:24:14+0000",
+      "title": "Tagi w latach",
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "year\tile\n1995\t3\n1996\t1047618\n1997\t459947\n1998\t202092\n1999\t788793\n2000\t1271623\n2001\t759141\n2002\t583409\n2003\t688694\n2004\t768168\n"
+          }
+        ]
+      }
+    }
+  ],
+  "name": "Movielens - Spark",
+  "id": "2H5RJYMMR",
+  "defaultInterpreterGroup": "spark",
+  "version": "0.10.0",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {},
+  "config": {
+    "isZeppelinNotebookCronEnable": false,
+    "looknfeel": "default",
+    "personalizedMode": "false"
+  },
+  "info": {
+    "isRunning": false
+  },
+  "path": "/Movielens - Spark"
+}
