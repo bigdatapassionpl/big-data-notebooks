@@ -1,16 +1,36 @@
 // Databricks notebook source
-// List files on Databricks store (Azure blob)
-display(dbutils.fs.ls("/FileStore/tables/movielens/hive"))
+dbutils.fs.ls("/")
 
 // COMMAND ----------
 
-val directoryPath: String = "/FileStore/tables/movielens/hive"
+display(dbutils.fs.ls("/"))
+
+// COMMAND ----------
+
+// List files on Databricks store (Azure blob)
+display(dbutils.fs.ls("/FileStore/"))
+
+// COMMAND ----------
+
+// Directories
+// val directoryPath: String = "/FileStore/tables/movielens/hive"
+val directoryPath: String = "/bigdatapassion/movielens/hive"
 val moviesPath: String = directoryPath + "/movies/movies.dat"
 val ratingsPath: String = directoryPath + "/ratings/ratings.dat"
 val tagsPath: String = directoryPath + "/tags/tags.dat"
 val movielensSeparator: String = "@"
 
-// reading from Data Lake
+// COMMAND ----------
+
+display(dbutils.fs.ls(s"$directoryPath/"))
+
+// COMMAND ----------
+
+display(dbutils.fs.ls(s"$directoryPath/movies/"))
+
+// COMMAND ----------
+
+// reading from DBFS to DataFrames
 val moviesDataFrame = spark.read.
       option("header", "false").
       option("charset", "UTF8").
@@ -45,6 +65,10 @@ val tagsDataFrame = spark.read.
 
 // COMMAND ----------
 
+display(moviesDataFrame)
+
+// COMMAND ----------
+
     moviesDataFrame.show(10)
     moviesDataFrame.printSchema()
 
@@ -60,9 +84,25 @@ val tagsDataFrame = spark.read.
 
 // COMMAND ----------
 
-    moviesDataFrame.createOrReplaceTempView("movies")
-    ratingsDataFrame.createOrReplaceTempView("ratings")
-    ratingsDataFrame.createOrReplaceTempView("tags")
+moviesDataFrame.createOrReplaceTempView("movies")
+ratingsDataFrame.createOrReplaceTempView("ratings")
+ratingsDataFrame.createOrReplaceTempView("tags")
+
+// COMMAND ----------
+
+// Registering temp table as real Table in Spark/Hive metastore :)
+// spark.sql("drop database if exists movielens cascade");
+
+// COMMAND ----------
+
+// Registering temp table as real Table in Spark/Hive metastore :)
+spark.sql("create database if not exists movielens");
+spark.sql("drop table if exists movielens.movies");
+spark.sql("drop table if exists movielens.ratings");
+spark.sql("drop table if exists movielens.tags");
+spark.sql("create table movielens.movies as select * from movies");
+spark.sql("create table movielens.ratings as select * from ratings");
+spark.sql("create table movielens.tags as select * from tags");
 
 // COMMAND ----------
 
@@ -78,12 +118,16 @@ val moviesAvg = spark.sql(
 
 // COMMAND ----------
 
+moviesAvg.show
+
+// COMMAND ----------
+
 display(moviesAvg)
 
 // COMMAND ----------
 
 // MAGIC %sql
-// MAGIC 
+// MAGIC
 // MAGIC SELECT genre, count(1) as count 
 // MAGIC from (
 // MAGIC   select explode(split(genres, '\\|')) as genre
