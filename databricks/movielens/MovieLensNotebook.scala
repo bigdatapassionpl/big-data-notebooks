@@ -1,14 +1,5 @@
 // Databricks notebook source
-dbutils.fs.ls("/")
-
-// COMMAND ----------
-
 display(dbutils.fs.ls("/"))
-
-// COMMAND ----------
-
-// List files on Databricks store (Azure blob)
-display(dbutils.fs.ls("/FileStore/"))
 
 // COMMAND ----------
 
@@ -26,7 +17,7 @@ display(dbutils.fs.ls(s"$directoryPath/"))
 
 // COMMAND ----------
 
-display(dbutils.fs.ls(s"$directoryPath/movies/"))
+display(dbutils.fs.ls(s"$moviesPath"))
 
 // COMMAND ----------
 
@@ -69,18 +60,18 @@ display(moviesDataFrame)
 
 // COMMAND ----------
 
-    moviesDataFrame.show(10)
-    moviesDataFrame.printSchema()
+moviesDataFrame.show(10)
+moviesDataFrame.printSchema()
 
 // COMMAND ----------
 
-    ratingsDataFrame.show(10)
-    ratingsDataFrame.printSchema()
+ratingsDataFrame.show(10)
+ratingsDataFrame.printSchema()
 
 // COMMAND ----------
 
-    tagsDataFrame.show(10)
-    tagsDataFrame.printSchema()
+tagsDataFrame.show(10)
+tagsDataFrame.printSchema()
 
 // COMMAND ----------
 
@@ -92,10 +83,6 @@ ratingsDataFrame.createOrReplaceTempView("tags")
 
 // Registering temp table as real Table in Spark/Hive metastore :)
 // spark.sql("drop database if exists movielens cascade");
-
-// COMMAND ----------
-
-// Registering temp table as real Table in Spark/Hive metastore :)
 spark.sql("create database if not exists movielens");
 spark.sql("drop table if exists movielens.movies");
 spark.sql("drop table if exists movielens.ratings");
