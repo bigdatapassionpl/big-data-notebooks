@@ -4,8 +4,8 @@ display(dbutils.fs.ls("/"))
 // COMMAND ----------
 
 // Directories
-// val directoryPath: String = "/FileStore/tables/movielens/hive"
-val directoryPath: String = "/bigdatapassion/movielens/hive"
+val directoryPath: String = "/FileStore/tables"
+// val directoryPath: String = "/bigdatapassion/movielens/hive"
 val moviesPath: String = directoryPath + "/movies/movies.dat"
 val ratingsPath: String = directoryPath + "/ratings/ratings.dat"
 val tagsPath: String = directoryPath + "/tags/tags.dat"
