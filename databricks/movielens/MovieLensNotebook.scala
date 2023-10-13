@@ -93,6 +93,10 @@ spark.sql("create table movielens.tags as select * from tags");
 
 // COMMAND ----------
 
+display(dbutils.fs.ls("/user/hive/warehouse/movielens.db/ratings"))
+
+// COMMAND ----------
+
 val moviesAvg = spark.sql(
       """
       SELECT m.title, count(*) as votes, avg(rating) rate
