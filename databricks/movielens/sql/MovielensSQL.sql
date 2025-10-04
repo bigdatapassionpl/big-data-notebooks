@@ -1,9 +1,25 @@
 -- Databricks notebook source
+SHOW CATALOGS;
+
+-- COMMAND ----------
+
+SELECT current_catalog();
+
+-- COMMAND ----------
+
+USE CATALOG politechnika;
+
+-- COMMAND ----------
+
 show databases;
 
 -- COMMAND ----------
 
-use movielens;
+SHOW SCHEMAS;
+
+-- COMMAND ----------
+
+use database movielens;
 
 -- COMMAND ----------
 
