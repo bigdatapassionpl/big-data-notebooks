@@ -3,8 +3,9 @@ display(dbutils.fs.ls("/"))
 
 # COMMAND ----------
 
+aws_bucket_name="radek-datasets-public"
 
-directoryPath = "/Volumes/politechnika/default/"
+directoryPath = f"s3a://{aws_bucket_name}/movielens/demo"
 
 moviesPath = f"{directoryPath}/movies/movies.dat"
 ratingsPath = f"{directoryPath}/ratings/ratings.dat"
@@ -78,6 +79,7 @@ ratingsDataFrame.createOrReplaceTempView("tags")
 
 # COMMAND ----------
 
+spark.sql("create catalog if not exists politechnika")
 spark.sql("USE CATALOG politechnika")
 
 # COMMAND ----------
