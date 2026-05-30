@@ -1,17 +1,10 @@
 # Databricks notebook source
-sc._jsc.hadoopConfiguration().set("fs.s3a.aws.credentials.provider", "org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider")
-
-# COMMAND ----------
 
 aws_bucket_name="radek-datasets-public"
 
 # COMMAND ----------
 
 display(dbutils.fs.ls(f"s3a://{aws_bucket_name}/movielens/demo/movies/"))
-
-# COMMAND ----------
-
-display(dbutils.fs.ls("/mnt/"))
 
 # COMMAND ----------
 
