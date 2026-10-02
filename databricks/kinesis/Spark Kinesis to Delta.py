@@ -1,4 +1,6 @@
 # Databricks notebook source
+# requires cluster with access mode: Dedicated (Single user), standard / shared clusters do not support awsSessionToken for Kinesis
+# for serverless (Databricks Free Edition) use: Spark Kinesis to Delta serverless
 # AWS Academy -> AWS Details -> AWS CLI (temporary credentials)
 aws_access_key_id = ""
 aws_secret_access_key = ""
