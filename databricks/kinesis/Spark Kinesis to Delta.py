@@ -1,6 +1,6 @@
 # Databricks notebook source
 # requires cluster with access mode: Dedicated (Single user), standard / shared clusters do not support awsSessionToken for Kinesis
-# for serverless (Databricks Free Edition) use: Spark Kinesis to Delta serverless
+# for serverless (Databricks Free Edition) use: Spark & Boto3 Kinesis to Delta
 # AWS Academy -> AWS Details -> AWS CLI (temporary credentials)
 aws_access_key_id = ""
 aws_secret_access_key = ""
@@ -89,6 +89,13 @@ SELECT animal, COUNT(*) AS cnt
 FROM {table_name}
 GROUP BY animal
 ORDER BY cnt DESC
+"""))
+
+# COMMAND ----------
+
+display(spark.sql(f"""
+SELECT COUNT(animal) AS all_animals, COUNT(DISTINCT animal) AS unique_animals
+FROM {table_name}
 """))
 
 # COMMAND ----------

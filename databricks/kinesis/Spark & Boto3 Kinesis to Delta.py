@@ -143,6 +143,13 @@ ORDER BY cnt DESC
 
 # COMMAND ----------
 
+display(spark.sql(f"""
+SELECT COUNT(animal) AS all_animals, COUNT(DISTINCT animal) AS unique_animals
+FROM {table_name}
+"""))
+
+# COMMAND ----------
+
 display(spark.sql(f"DESCRIBE HISTORY {table_name}"))
 
 # COMMAND ----------
